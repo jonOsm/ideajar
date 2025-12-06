@@ -17,4 +17,16 @@ export class SystemService {
             url: '/api/health',
         });
     }
+    /**
+     * Seed Data
+     * Seed initial data.
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static seedDataApiSeedPost(): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/seed',
+        });
+    }
 }

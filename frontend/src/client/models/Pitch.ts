@@ -3,17 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Pitch = {
-    id: string;
+    id?: string;
     title: string;
     description: string;
-    type: Pitch.type;
+    type: string;
     submitter?: string;
 };
-export namespace Pitch {
-    export enum type {
-        IDEA = 'idea',
-        OPINION = 'opinion',
-        PITCH = 'pitch',
-    }
-}
 

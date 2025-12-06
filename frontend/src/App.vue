@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import SwipableCard from './components/SwipableCard.vue'
-import { PitchesService, type Pitch, Vote } from './client'
+import { PitchesService, type Pitch } from './client'
 import { OpenAPI } from './client/core/OpenAPI'
 
 // Configure OpenAPI base url to be empty string so it uses absolute path from root, which Vite proxies
@@ -37,7 +37,7 @@ const handleVote = async (direction: 'like' | 'dislike') => {
   try {
     await PitchesService.submitVote({
       pitch_id: currentPitch.id,
-      vote_type: direction === 'like' ? Vote.vote_type.LIKE : Vote.vote_type.DISLIKE
+      vote_type: direction
     })
     console.log(`Voted ${direction} on ${currentPitch.title}`)
   } catch (error) {
@@ -56,7 +56,7 @@ const currentPitch = computed(() => pitches.value[0])
 <template>
   <div class="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
     <header class="mb-8 text-center">
-      <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
+      <h1 class="text-4xl font-extrabold text-violet-600">
         IdeaSwipe
       </h1>
       <p class="text-gray-500 mt-2">Find your next big inspiration</p>

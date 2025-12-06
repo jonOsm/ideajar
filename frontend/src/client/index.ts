@@ -8,9 +8,9 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { HTTPValidationError } from './models/HTTPValidationError';
-export { Pitch } from './models/Pitch';
+export type { Pitch } from './models/Pitch';
 export type { ValidationError } from './models/ValidationError';
-export { Vote } from './models/Vote';
+export type { Vote } from './models/Vote';
 
 export { DefaultService } from './services/DefaultService';
 export { PitchesService } from './services/PitchesService';
