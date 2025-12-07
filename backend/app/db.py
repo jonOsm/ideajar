@@ -22,9 +22,22 @@ async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
 
+from fastapi import Depends
+from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
+from app.models import User
+
+# ... (previous imports)
+
+# ... (engine config)
+
+# ... (init_db)
+
 async def get_session() -> AsyncSession:
     async_session = sessionmaker(
         engine, class_=AsyncSession, expire_on_commit=False
     )
     async with async_session() as session:
         yield session
+
+async def get_user_db(session: AsyncSession = Depends(get_session)):
+    yield SQLAlchemyUserDatabase(session, User)

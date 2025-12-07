@@ -31,7 +31,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 import sys
 sys.path.append(os.getcwd())
-from app.models import Pitch, Vote  # noqa: F401
+from app.models import Pitch, Vote, User  # noqa: F401
 target_metadata = SQLModel.metadata
 
 # other values from the config, defined by the needs of env.py,
