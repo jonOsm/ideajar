@@ -10,10 +10,7 @@ from .api.routers import pitches, system
 # --- Lifespan ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Retrieve/Check connection on startup
-    # We could also create tables here if not using Alembic: await init_db()
     yield
-    # Clean up DB connections on shutdown
     await engine.dispose()
 
 app = FastAPI(lifespan=lifespan)

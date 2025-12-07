@@ -4,13 +4,6 @@ import SwipableCard from './components/SwipableCard.vue'
 import { PitchesService, type Pitch } from './client'
 import { OpenAPI } from './client/core/OpenAPI'
 
-// Configure OpenAPI base url to be empty string so it uses absolute path from root, which Vite proxies
-// Or if it defaults to localhost:8000, we might hit CORS if not proxied.
-// Since we have proxy at /api, and backend serves at /api, let's see check generated code defaults.
-// Usually generated code has a BASE constant.
-// Let's assume relative path '/api' is needed? 
-// The generated client usually uses the server URL from openapi.json.
-// We'll set it to empty string so it respects the proxy.
 OpenAPI.BASE = '' 
 
 const pitches = ref<Pitch[]>([])
@@ -42,9 +35,9 @@ const handleVote = async (direction: 'like' | 'dislike') => {
     console.log(`Voted ${direction} on ${currentPitch.title}`)
   } catch (error) {
     console.error("Failed to submit vote", error)
-    // In a real app, maybe show a toast or undo
   }
 }
+
 
 onMounted(() => {
   fetchPitches()
@@ -69,14 +62,12 @@ const currentPitch = computed(() => pitches.value[0])
       </div>
 
       <div v-else-if="currentPitch" class="relative w-full h-full flex items-center justify-center">
-        <!-- We key by ID so component resets state when pitch changes -->
         <SwipableCard 
           :key="currentPitch.id"
           :pitch="currentPitch" 
           @vote="handleVote"
         />
         
-        <!-- Stack effect backing cards -->
         <div v-if="pitches.length > 1" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm h-auto p-6 bg-white rounded-xl shadow opacity-50 scale-95 -z-10 border border-gray-100">
              <div class="h-48"></div>
         </div>
@@ -98,7 +89,7 @@ const currentPitch = computed(() => pitches.value[0])
 </template>
 
 <style>
-/* Global styles if needed, though Tailwind handles most */
+
 body {
     background-color: #f9fafb;
 }

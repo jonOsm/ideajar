@@ -10,7 +10,6 @@ router = APIRouter(tags=["Pitches"])
 @router.get("/pitches", response_model=List[Pitch], operation_id="get_pitches")
 async def get_pitches(session: AsyncSession = Depends(get_session)) -> List[Pitch]:
     """Get a list of pitches to swipe on."""
-    # Logic: Get all pitches. In a real app, might filter by what user hasn't voted on.
     statement = select(Pitch)
     result = await session.execute(statement)
     return result.scalars().all()

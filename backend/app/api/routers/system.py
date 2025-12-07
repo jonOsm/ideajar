@@ -10,7 +10,6 @@ router = APIRouter(tags=["System"])
 @router.get("/health", operation_id="health_check")
 async def health(session: AsyncSession = Depends(get_session)):
     try:
-        # Simple query to check DB connection
         await session.execute(select(1))
         db_status = "connected"
     except Exception as e:
@@ -20,7 +19,6 @@ async def health(session: AsyncSession = Depends(get_session)):
 @router.post("/seed")
 async def seed_data(session: AsyncSession = Depends(get_session)):
     """Seed initial data."""
-    # Check if empty
     result = await session.execute(select(Pitch))
     if result.scalars().first():
         return {"message": "Already seeded"}
