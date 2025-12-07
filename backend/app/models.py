@@ -14,8 +14,16 @@ class User(SQLModel, table=True):
 class UserRead(schemas.BaseUser[UUID]):
     pass
 
+from pydantic import field_validator
+from app.constants import MIN_PASSWORD_LENGTH
+
 class UserCreate(schemas.BaseUserCreate):
-    pass
+    @field_validator('password')
+    @classmethod
+    def validate_password(cls, v: str) -> str:
+        if len(v) < MIN_PASSWORD_LENGTH:
+            raise ValueError('REGISTER_INVALID_PASSWORD')
+        return v
 
 class UserUpdate(schemas.BaseUserUpdate):
     pass

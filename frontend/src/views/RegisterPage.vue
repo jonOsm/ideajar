@@ -3,6 +3,9 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { AuthService } from '../client'
 
+import { getReadableError, ErrorMessages } from '../constants/errors'
+import { ValidationRules } from '../constants/validation'
+
 const router = useRouter()
 const email = ref('')
 const password = ref('')
@@ -12,6 +15,14 @@ const loading = ref(false)
 const handleRegister = async () => {
     loading.value = true
     error.value = ''
+    
+    // Client-side validation
+    if (password.value.length < ValidationRules.MIN_PASSWORD_LENGTH) {
+        error.value = ErrorMessages.REGISTER_INVALID_PASSWORD
+        loading.value = false
+        return
+    }
+    
     try {
         const register = AuthService.registerRegisterApiAuthRegisterPost
         await register({
@@ -22,9 +33,10 @@ const handleRegister = async () => {
             is_verified: false
         })
         // Redirect to login (or auto login, but let's keep it simple)
-        router.push('/login')
+        // Redirect to login with success indicator
+        router.push({ path: '/login', query: { registered: 'true' } })
     } catch (e: any) {
-        error.value = 'Registration failed. Try a different email.'
+        error.value = getReadableError(e, ErrorMessages.DEFAULT_REGISTER)
         console.error(e)
     } finally {
         loading.value = false
@@ -51,6 +63,9 @@ const handleRegister = async () => {
                             <span class="label-text">Password</span>
                         </label>
                         <input type="password" required v-model="password" placeholder="********" class="input input-bordered" />
+                        <label class="label">
+                            <span class="label-text-alt text-base-content/60">Must be at least {{ ValidationRules.MIN_PASSWORD_LENGTH }} characters</span>
+                        </label>
                     </div>
 
                     <div v-if="error" class="alert alert-error shadow-lg">
