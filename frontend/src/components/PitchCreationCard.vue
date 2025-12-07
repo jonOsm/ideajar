@@ -68,7 +68,7 @@ const submitPitch = async () => {
             :type="type"
             class="card w-full h-full border-2"
             :class="{ 
-                'border-primary': type === 'Idea', 
+                'border-info': type === 'Idea', 
                 'border-secondary': type === 'Opinion' 
             }"
             :style="cardTransform"
@@ -76,11 +76,11 @@ const submitPitch = async () => {
             <div class="card-body p-6 flex flex-col h-full relative z-10">
                 <!-- Header / Type Toggle -->
                 <div class="flex justify-between items-center mb-2">
-                    <h2 class="card-title text-2xl font-black">New Pitch</h2>
+                    <h2 class="card-title text-2xl font-black">New {{ type }}</h2>
                     <div class="join">
                          <input 
                             class="join-item btn btn-sm" 
-                            :class="{ 'btn-primary': type === 'Idea' }"
+                            :class="{ 'btn-info': type === 'Idea' }"
                             type="radio" 
                             name="options" 
                             aria-label="Idea" 
@@ -104,20 +104,32 @@ const submitPitch = async () => {
                     <label class="label py-1">
                         <span class="label-text font-bold">Title</span>
                     </label>
-                    <input type="text" v-model="title" placeholder="What's the big idea?" class="input input-bordered w-full" maxlength="50" />
+                    <input 
+                        type="text" 
+                        v-model="title" 
+                        placeholder="What's the big idea?" 
+                        class="input input-bordered w-full bg-base-100/50 backdrop-blur-sm"
+                        :class="{ 'border-info': type === 'Idea', 'border-secondary': type === 'Opinion' }"
+                        maxlength="50" 
+                    />
                 </div>
 
-                <div class="form-control w-full mt-2 flex-grow">
+                <div class="form-control w-full mt-2 flex-grow flex flex-col">
                     <label class="label py-1">
                         <span class="label-text font-bold">Description</span>
                     </label>
-                    <textarea v-model="description" class="textarea textarea-bordered h-full resize-none leading-relaxed text-base" placeholder="Tell us more details..."></textarea>
+                    <textarea 
+                        v-model="description" 
+                        class="textarea textarea-bordered w-full flex-grow resize-none leading-relaxed text-base bg-base-100/50 backdrop-blur-sm" 
+                        :class="{ 'border-info': type === 'Idea', 'border-secondary': type === 'Opinion' }"
+                        placeholder="Tell us more details..."
+                    ></textarea>
                 </div>
 
                 <!-- Helper / Error -->
                 <div class="min-h-[1.5rem] mt-2 text-center">
                     <span v-if="error" class="text-error text-sm font-bold">{{ error }}</span>
-                    <span v-else class="text-base-content/50 text-xs uppercase tracking-wide font-bold">
+                    <span v-else class="text-slate-600 dark:text-white/90 text-xs uppercase tracking-wide font-bold shadow-black/5 drop-shadow-sm">
                         Swipe Right to Post &bull; Left to Cancel
                     </span>
                 </div>
