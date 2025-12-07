@@ -26,7 +26,6 @@ async def seed_data(session: AsyncSession = Depends(get_session)):
     pitches = [
         Pitch(title="Cat Café & Laundromat", description="Drink coffee and pet cats while waiting for your laundry.", type="idea", submitter="Alice"),
         Pitch(title="Pineapple on Pizza is Good", description="The sweetness cuts the saltiness. Ideally with jalapeños.", type="opinion", submitter="Bob"),
-        Pitch(title="Uber for Dog Walking", description="On-demand dog walkers nearby. GPS tracked.", type="pitch", submitter="Charlie"),
     ]
     for p in pitches:
         session.add(p)
