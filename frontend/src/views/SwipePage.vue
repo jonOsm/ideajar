@@ -52,20 +52,20 @@ const currentPitch = computed(() => pitches.value[0])
 </script>
 
 <template>
-  <div class="min-h-screen bg-base-200 flex flex-col items-center justify-center p-4">
-    <header class="mb-8 text-center flex flex-col items-center relative w-full max-w-sm">
-      <h1 class="text-5xl font-extrabold text-primary mb-2">
+  <div class="fixed inset-0 bg-base-200 flex flex-col items-center justify-between p-4 sm:p-8 overflow-hidden">
+    <header class="text-center flex flex-col items-center relative w-full max-w-sm shrink-0">
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-primary mb-1 sm:mb-2">
         IdeaJar
       </h1>
-      <p class="text-base-content/70">Find your next big inspiration</p>
+      <p class="text-base-content/70 text-sm sm:text-base">Find your next big inspiration</p>
       <button @click="handleLogout" class="btn btn-ghost btn-sm absolute right-0 top-0">
         Sign Out
       </button>
     </header>
 
-    <main class="relative w-full max-w-sm h-[600px] flex items-center justify-center">
-      <div v-if="loading" class="flex flex-col items-center w-full">
-         <div class="skeleton w-full h-96 rounded-xl"></div>
+    <main class="relative w-full max-w-md h-[70vh] max-h-[600px] my-4 flex items-center justify-center">
+      <div v-if="loading" class="flex flex-col items-center w-full h-full">
+         <div class="skeleton w-full h-full rounded-3xl"></div>
       </div>
 
       <div v-else-if="currentPitch" class="relative w-full h-full flex items-center justify-center">
@@ -75,9 +75,7 @@ const currentPitch = computed(() => pitches.value[0])
           @vote="handleVote"
         />
         
-        <div v-if="pitches.length > 1" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm h-auto p-6 bg-base-100 rounded-xl shadow-lg opacity-50 scale-95 -z-10 border border-base-300">
-             <div class="h-48"></div>
-        </div>
+        <div v-if="pitches.length > 1" class="absolute inset-0 w-full h-full bg-base-100 rounded-3xl shadow-lg opacity-50 scale-95 -z-10 border border-base-300"></div>
       </div>
 
       <div v-else class="text-center">
@@ -92,5 +90,7 @@ const currentPitch = computed(() => pitches.value[0])
         </button>
       </div>
     </main>
+    
+    <div class="shrink-0 h-4"></div> <!-- Bottom spacer -->
   </div>
 </template>

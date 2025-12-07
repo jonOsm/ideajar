@@ -49,31 +49,31 @@ const handleLogin = async () => {
 </script>
 
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-base-200 px-4">
-        <div class="card w-full max-w-sm shadow-2xl bg-base-100">
-            <div class="card-body">
-                <h2 class="card-title justify-center text-3xl font-extrabold pb-4">Sign in to IdeaJar</h2>
+    <div class="min-h-screen flex items-start sm:items-center justify-center bg-base-200 p-0 sm:p-4">
+        <div class="card w-full sm:max-w-sm shadow-none sm:shadow-2xl bg-base-100 h-screen sm:h-auto rounded-none sm:rounded-2xl">
+            <div class="card-body justify-center">
+                <h2 class="card-title justify-center text-3xl font-extrabold pb-8 pt-4">Sign in to IdeaJar</h2>
                 
-                <div v-if="successMessage" class="alert alert-success shadow-lg">
+                <div v-if="successMessage" class="alert alert-success shadow-lg mb-4">
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         <span>{{ successMessage }}</span>
                     </div>
                 </div>
 
-                <form class="space-y-4" @submit.prevent="handleLogin">
-                    <div class="form-control">
+                <form class="space-y-6" @submit.prevent="handleLogin">
+                    <div class="form-control w-full">
                         <label class="label">
-                            <span class="label-text">Email address</span>
+                            <span class="label-text text-base">Email address</span>
                         </label>
-                        <input type="email" required v-model="email" placeholder="email@example.com" class="input input-bordered" />
+                        <input type="email" required v-model="email" placeholder="email@example.com" class="input input-bordered input-lg w-full" />
                     </div>
                     
-                    <div class="form-control">
+                    <div class="form-control w-full">
                         <label class="label">
-                            <span class="label-text">Password</span>
+                            <span class="label-text text-base">Password</span>
                         </label>
-                        <input type="password" required v-model="password" placeholder="********" class="input input-bordered" />
+                        <input type="password" required v-model="password" placeholder="********" class="input input-bordered input-lg w-full" />
                     </div>
 
                     <div v-if="error" class="alert alert-error shadow-lg">
@@ -83,14 +83,14 @@ const handleLogin = async () => {
                         </div>
                     </div>
 
-                    <div class="form-control mt-6">
-                        <button type="submit" class="btn btn-primary" :class="{ 'loading': loading }" :disabled="loading">
+                    <div class="form-control mt-8">
+                        <button type="submit" class="btn btn-primary btn-lg w-full" :class="{ 'loading': loading }" :disabled="loading">
                             {{ loading ? 'Signing in...' : 'Sign in' }}
                         </button>
                     </div>
                     
-                    <div class="text-center mt-4">
-                        <router-link to="/register" class="link link-hover text-sm">
+                    <div class="text-center mt-6">
+                        <router-link to="/register" class="link link-hover text-base p-2">
                             Don't have an account? Sign up
                         </router-link>
                     </div>
