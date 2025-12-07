@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Pitch } from '../models/Pitch';
+import type { PitchCreate } from '../models/PitchCreate';
 import type { Vote } from '../models/Vote';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -18,6 +19,26 @@ export class PitchesService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/pitches',
+        });
+    }
+    /**
+     * Create Pitch
+     * Create a new pitch.
+     * @param requestBody
+     * @returns Pitch Successful Response
+     * @throws ApiError
+     */
+    public static createPitch(
+        requestBody: PitchCreate,
+    ): CancelablePromise<Pitch> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/pitches',
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: `Validation Error`,
+            },
         });
     }
     /**

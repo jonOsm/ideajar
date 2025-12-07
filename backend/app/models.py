@@ -48,6 +48,11 @@ class Pitch(SQLModel, table=True):
     type: str
     submitter: str = "Anonymous"
 
+class PitchCreate(SQLModel):
+    title: str
+    description: str
+    type: str
+
 class Vote(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     pitch_id: UUID

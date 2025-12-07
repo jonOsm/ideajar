@@ -12,6 +12,7 @@ export type { Body_auth_jwt_login_api_auth_jwt_login_post } from './models/Body_
 export type { ErrorModel } from './models/ErrorModel';
 export type { HTTPValidationError } from './models/HTTPValidationError';
 export type { Pitch } from './models/Pitch';
+export type { PitchCreate } from './models/PitchCreate';
 export type { UserCreate } from './models/UserCreate';
 export type { UserRead } from './models/UserRead';
 export type { UserUpdate } from './models/UserUpdate';
