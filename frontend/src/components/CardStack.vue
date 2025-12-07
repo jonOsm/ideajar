@@ -28,7 +28,7 @@ const handleCardVote = (type: 'like' | 'dislike') => {
 </script>
 
 <template>
-    <div class="stack w-full max-w-sm h-96 relative">
+    <div class="stack w-full h-full relative">
         <!-- Next Card (Bottom) -->
         <SwipableCard
             v-if="nextPitch"

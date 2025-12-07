@@ -67,7 +67,7 @@ onMounted(() => {
         <!-- Page Content -->
         <AppHeader @openMenu="showMenu = true" />
 
-        <div class="relative w-full max-w-md h-[60vh] max-h-[500px] flex items-center justify-center">
+        <div class="relative w-full max-w-md h-[70vh] md:h-[75vh] max-h-[600px] md:max-h-[700px] flex items-center justify-center">
              <Transition name="fade" mode="out-in">
                 <PitchCreationCard
                     v-if="isCreating"
@@ -107,14 +107,11 @@ onMounted(() => {
         </div>
     </div> 
     
-    <div class="drawer-side z-50">
-        <label for="app-drawer" class="drawer-overlay"></label>
-        <SidebarMenu 
-            drawerId="app-drawer" 
-            @close="showMenu = false" 
-            @logout="handleLogout" 
-        />
-    </div>
+    <SidebarMenu 
+        drawerId="app-drawer" 
+        @close="showMenu = false" 
+        @logout="handleLogout" 
+    />
   </div>
 </template>
 
