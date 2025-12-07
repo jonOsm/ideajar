@@ -54,10 +54,10 @@ const cardStyle = computed(() => {
 
 const typeColor = computed(() => {
     switch(props.pitch.type) {
-        case 'idea': return 'bg-blue-100 text-blue-800'
-        case 'opinion': return 'bg-purple-100 text-purple-800'
-        case 'pitch': return 'bg-green-100 text-green-800'
-        default: return 'bg-gray-100 text-gray-800'
+        case 'idea': return 'badge-info'
+        case 'opinion': return 'badge-secondary'
+        case 'pitch': return 'badge-accent'
+        default: return 'badge-ghost'
     }
 })
 </script>
@@ -65,27 +65,27 @@ const typeColor = computed(() => {
 <template>
   <div 
     ref="cardRef" 
-    class="absolute w-full max-w-sm bg-white rounded-xl shadow-2xl p-6 border-2 border-gray-100 touch-none select-none transition-transform duration-75"
+    class="absolute w-full max-w-sm card bg-base-100 shadow-xl border-2 border-base-200 p-6 touch-none select-none transition-transform duration-75"
     :style="cardStyle"
   >
     <div class="mb-4">
-        <span :class="['px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide', typeColor]">
+        <span class="badge badge-lg font-bold uppercase tracking-wide" :class="typeColor">
             {{ pitch.type }}
         </span>
     </div>
-    <h2 class="text-3xl font-bold mb-2 text-gray-800">{{ pitch.title }}</h2>
-    <p class="text-gray-600 text-lg leading-relaxed">{{ pitch.description }}</p>
+    <h2 class="text-3xl font-bold mb-2 text-base-content">{{ pitch.title }}</h2>
+    <p class="text-base-content/80 text-lg leading-relaxed">{{ pitch.description }}</p>
     
-    <div class="mt-6 pt-4 border-t border-gray-100 flex justify-between text-sm text-gray-400">
+    <div class="mt-6 pt-4 border-t border-base-200 flex justify-between text-sm text-base-content/60">
         <span>Submitted by {{ pitch.submitter }}</span>
         <span>Swipe L/R to Vote</span>
     </div>
     
     <!-- Visual indicators for swipe -->
-    <div v-if="visualOffset.x > 50" class="absolute top-4 right-4 text-green-500 font-bold text-xl border-2 border-green-500 rounded px-2 rotate-12 bg-white/80">
+    <div v-if="visualOffset.x > 50" class="absolute top-4 right-4 text-success font-bold text-xl border-4 border-success rounded-lg px-2 rotate-12 bg-base-100/80">
         LIKE
     </div>
-    <div v-if="visualOffset.x < -50" class="absolute top-4 left-4 text-red-500 font-bold text-xl border-2 border-red-500 rounded px-2 -rotate-12 bg-white/80">
+    <div v-if="visualOffset.x < -50" class="absolute top-4 left-4 text-error font-bold text-xl border-4 border-error rounded-lg px-2 -rotate-12 bg-base-100/80">
         NOPE
     </div>
   </div>

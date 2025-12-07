@@ -33,43 +33,46 @@ const handleRegister = async () => {
 </script>
 
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
-            <div>
-                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Create Account</h2>
-            </div>
-            <form class="mt-8 space-y-6" @submit.prevent="handleRegister">
-                <div class="rounded-md shadow-sm -space-y-px">
-                    <div>
-                        <label for="email-address" class="sr-only">Email address</label>
-                        <input id="email-address" name="email" type="email" required v-model="email"
-                            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-violet-500 focus:border-violet-500 focus:z-10 sm:text-sm"
-                            placeholder="Email address">
-                    </div>
-                    <div>
-                        <label for="password" class="sr-only">Password</label>
-                        <input id="password" name="password" type="password" required v-model="password"
-                            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-violet-500 focus:border-violet-500 focus:z-10 sm:text-sm"
-                            placeholder="Password">
-                    </div>
-                </div>
-
-                <div v-if="error" class="text-red-500 text-sm text-center">{{ error }}</div>
-
-                <div>
-                    <button type="submit" :disabled="loading"
-                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 disabled:opacity-50">
-                        <span v-if="loading">Registering...</span>
-                        <span v-else>Sign Up</span>
-                    </button>
-                </div>
+    <div class="min-h-screen flex items-center justify-center bg-base-200 px-4">
+        <div class="card w-full max-w-sm shadow-2xl bg-base-100">
+            <div class="card-body">
+                <h2 class="card-title justify-center text-3xl font-extrabold pb-4">Create Account</h2>
                 
-                <div class="text-center text-sm">
-                    <router-link to="/login" class="font-medium text-violet-600 hover:text-violet-500">
-                        Already have an account? Sign in
-                    </router-link>
-                </div>
-            </form>
+                <form class="space-y-4" @submit.prevent="handleRegister">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Email address</span>
+                        </label>
+                        <input type="email" required v-model="email" placeholder="email@example.com" class="input input-bordered" />
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Password</span>
+                        </label>
+                        <input type="password" required v-model="password" placeholder="********" class="input input-bordered" />
+                    </div>
+
+                    <div v-if="error" class="alert alert-error shadow-lg">
+                        <div>
+                           <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>{{ error }}</span>
+                        </div>
+                    </div>
+
+                    <div class="form-control mt-6">
+                        <button type="submit" class="btn btn-primary" :class="{ 'loading': loading }" :disabled="loading">
+                             {{ loading ? 'Registering...' : 'Sign Up' }}
+                        </button>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <router-link to="/login" class="link link-hover text-sm">
+                            Already have an account? Sign in
+                        </router-link>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </template>
