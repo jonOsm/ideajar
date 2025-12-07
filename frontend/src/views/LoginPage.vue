@@ -64,14 +64,14 @@ const handleLogin = async () => {
                 <form class="space-y-6" @submit.prevent="handleLogin">
                     <div class="form-control w-full">
                         <label class="label">
-                            <span class="label-text text-base">Email address</span>
+                            <span class="label-text text-base font-bold">Email address</span>
                         </label>
                         <input type="email" required v-model="email" placeholder="email@example.com" class="input input-bordered input-lg w-full" />
                     </div>
                     
                     <div class="form-control w-full">
                         <label class="label">
-                            <span class="label-text text-base">Password</span>
+                            <span class="label-text text-base font-bold">Password</span>
                         </label>
                         <input type="password" required v-model="password" placeholder="********" class="input input-bordered input-lg w-full" />
                     </div>
