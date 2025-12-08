@@ -8,6 +8,7 @@ import AppHeader from '../components/AppHeader.vue'
 import SidebarMenu from '../components/SidebarMenu.vue'
 import CardStack from '../components/CardStack.vue'
 import PitchCreationCard from '../components/PitchCreationCard.vue'
+import SwipeParticles from '../components/SwipeParticles.vue'
 
 const router = useRouter()
 const pitches = ref<Pitch[]>([])
@@ -124,6 +125,8 @@ onMounted(() => {
         @close="showMenu = false" 
         @logout="handleLogout" 
     />
+    
+    <SwipeParticles />
   </div>
 </template>
 
