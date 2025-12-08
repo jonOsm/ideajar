@@ -27,19 +27,24 @@ const updateCanvasSize = () => {
 }
 
 const spawnParticles = (side: 'left' | 'right') => {
-    const count = 60
-    const xBase = side === 'left' ? 0 : window.innerWidth
-    const color = side === 'left' ? '#f43f5e' : '#10b981' // rose-500 : emerald-500
-    // Variation in colors: slightly lighter/darker?
-    // Let's stick to base color for now or add random opacity?
+    const count = 150 // Higher density
+    // Start slightly off-screen
+    const xBase = side === 'left' ? -50 : window.innerWidth + 50
+    const color = side === 'left' ? '#f43f5e' : '#10b981' 
+    
+    const isDesktop = window.innerWidth > 768
 
     for (let i = 0; i < count; i++) {
-        const y = Math.random() * window.innerHeight * 0.8 + window.innerHeight * 0.1 // Center 80%
+        // "Volcano" origin: tightly clustered at vertical center
+        const y = window.innerHeight / 2 + (Math.random() - 0.5) * 40
         
-        // Velocity: pointing inwards with some spread
-        const speed = Math.random() * 15 + 10 // Fast shot
-        const angleBase = side === 'left' ? 0 : Math.PI // Right (0) or Left (PI)
-        const angleSpread = (Math.random() - 0.5) * 1.5 // +/- 45 deg spread
+        // Eruption velocity: Fast and fanned out
+        const speed = Math.random() * 20 + 15 
+        
+        const angleBase = side === 'left' ? 0 : Math.PI
+        // Tighter fan spread on mobile, wider on desktop
+        const spreadFactor = isDesktop ? 1.5 : 0.8
+        const angleSpread = (Math.random() - 0.5) * spreadFactor
         const angle = angleBase + angleSpread
 
         particles.push({
@@ -48,7 +53,7 @@ const spawnParticles = (side: 'left' | 'right') => {
             vx: Math.cos(angle) * speed,
             vy: Math.sin(angle) * speed,
             color: color,
-            size: Math.random() * 6 + 2,
+            size: Math.random() * 3 + 1, // Smaller particles (1-4px)
             life: 1,
             maxLife: 1
         })
@@ -71,6 +76,10 @@ const loop = () => {
     for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i]
         if (!p) continue
+        
+        // Add turbulence / noise
+        p.vx += (Math.random() - 0.5) * 0.5
+        p.vy += (Math.random() - 0.5) * 0.5
         
         p.x += p.vx
         p.y += p.vy
