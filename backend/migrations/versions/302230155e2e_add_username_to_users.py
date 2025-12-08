@@ -10,6 +10,7 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 import sqlmodel
+import random
 
 
 # revision identifiers, used by Alembic.
@@ -28,7 +29,7 @@ def upgrade() -> None:
     connection = op.get_bind()
     results = connection.execute(sa.text("SELECT id FROM \"user\""))
     for row in results:
-        import random
+
         random_num = random.randint(1000, 9999)
         username = f"user#{random_num}"
         connection.execute(
