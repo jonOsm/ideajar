@@ -55,14 +55,6 @@ const submitPitch = async () => {
 
 <template>
     <div ref="containerConfig" class="relative w-full h-full">
-        <!-- Overlay Indicators -->
-        <div v-if="isSwipingRight" class="absolute top-10 right-8 z-50 pointer-events-none transform rotate-12 border-4 border-success text-success rounded-lg px-4 py-2 text-4xl font-bold uppercase tracking-widest bg-base-100/20 backdrop-blur-sm">
-            POST
-        </div>
-        <div v-if="isSwipingLeft" class="absolute top-10 left-8 z-50 pointer-events-none transform -rotate-12 border-4 border-error text-error rounded-lg px-4 py-2 text-4xl font-bold uppercase tracking-widest bg-base-100/20 backdrop-blur-sm">
-            DISCARD
-        </div>
-
         <BaseCard
             ref="cardComponent"
             :type="type"
@@ -73,6 +65,14 @@ const submitPitch = async () => {
             }"
             :style="cardTransform"
         >
+            <!-- Overlay Indicators -->
+            <div v-if="isSwipingRight" class="absolute top-10 right-8 z-50 pointer-events-none transform rotate-12 border-4 border-success text-success rounded-lg px-4 py-2 text-4xl font-bold uppercase tracking-widest bg-base-100/20 backdrop-blur-sm">
+                POST
+            </div>
+            <div v-if="isSwipingLeft" class="absolute top-10 left-8 z-50 pointer-events-none transform -rotate-12 border-4 border-error text-error rounded-lg px-4 py-2 text-4xl font-bold uppercase tracking-widest bg-base-100/20 backdrop-blur-sm">
+                DISCARD
+            </div>
+
             <div class="card-body p-6 flex flex-col h-full relative z-10">
                 <!-- Header / Type Toggle -->
                 <div class="flex justify-between items-center mb-2">
