@@ -1,10 +1,16 @@
-import { computed, ref, watch, type Ref } from 'vue'
+import { computed, ref, watch, onUnmounted, type Ref } from 'vue'
 import { usePointerSwipe } from '@vueuse/core'
 
 interface SwipeOptions {
     threshold?: number
     onSwipeRight?: () => void
     onSwipeLeft?: () => void
+}
+
+const globalSwipeX = ref(0) // Shared state for global effects
+
+export function useSwipeState() {
+    return { globalSwipeX }
 }
 
 export function useCardSwipe(target: Ref<HTMLElement | null>, options: SwipeOptions = {}) {
@@ -21,6 +27,8 @@ export function useCardSwipe(target: Ref<HTMLElement | null>, options: SwipeOpti
     watch(distanceX, (newVal) => {
         if (isSwiping.value && !isExiting.value) {
             currentDistanceX.value = -newVal
+            // Update global state only if we are actively swiping
+            globalSwipeX.value = -newVal
         }
     })
 
@@ -35,6 +43,9 @@ export function useCardSwipe(target: Ref<HTMLElement | null>, options: SwipeOpti
                 isExiting.value = true
                 exitDirection.value = dir
 
+                // Maximize global glow for exit
+                globalSwipeX.value = dir * 1000
+
                 // Trigger callbacks after animation
                 setTimeout(() => {
                     if (dir === 1) onSwipeRight?.()
@@ -44,11 +55,25 @@ export function useCardSwipe(target: Ref<HTMLElement | null>, options: SwipeOpti
                     isExiting.value = false
                     exitDirection.value = 0
                     currentDistanceX.value = 0
+                    // We also reset global swipe X here, but checking if WE set it? 
+                    // It's safe to reset if we were the ones exiting.
+                    globalSwipeX.value = 0
                 }, 200)
             } else {
                 // Snap back
                 currentDistanceX.value = 0
+                globalSwipeX.value = 0
             }
+        }
+    })
+
+    // Safety cleanup
+    onUnmounted(() => {
+        // If this component was controlling the glow, reset it.
+        // Simple heuristic: if the glow matches our direction or if we were exiting.
+        // Or just reset it. Since unmounting usually happens after interaction or page leave.
+        if (isExiting.value || Math.abs(currentDistanceX.value) > 0) {
+            globalSwipeX.value = 0
         }
     })
 
