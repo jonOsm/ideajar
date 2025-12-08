@@ -38,14 +38,16 @@ const handleCardVote = (type: 'like' | 'dislike') => {
         />
 
         <!-- Active Card (Top) -->
-        <SwipableCard
-            v-if="activePitch"
-            :key="activePitch.id"
-            :pitch="activePitch"
-            :is-active="true"
-            @vote="handleCardVote"
-            class="z-10 absolute inset-0"
-        />
+        <Transition name="promote-card">
+            <SwipableCard
+                v-if="activePitch"
+                :key="activePitch.id"
+                :pitch="activePitch"
+                :is-active="true"
+                @vote="handleCardVote"
+                class="z-10 absolute inset-0"
+            />
+        </Transition>
 
         <!-- No More Cards -->
         <NoMoreCard
@@ -55,3 +57,13 @@ const handleCardVote = (type: 'like' | 'dislike') => {
         />
     </div>
 </template>
+
+<style scoped>
+.promote-card-enter-active {
+    transition: all 0.2s ease-out;
+}
+.promote-card-enter-from {
+    transform: scale(0.9) translateY(1rem) !important;
+    opacity: 0.7;
+}
+</style>

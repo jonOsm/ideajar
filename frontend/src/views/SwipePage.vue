@@ -3,16 +3,19 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { PitchesService } from '../client'
 import type { Pitch } from '../client/models/Pitch'
+import { useSwipeState } from '../composables/useCardSwipe'
 import AppHeader from '../components/AppHeader.vue'
 import SidebarMenu from '../components/SidebarMenu.vue'
 import CardStack from '../components/CardStack.vue'
 import PitchCreationCard from '../components/PitchCreationCard.vue'
+import SwipeParticles from '../components/SwipeParticles.vue'
 
 const router = useRouter()
 const pitches = ref<Pitch[]>([])
 const loading = ref(false)
 const showMenu = ref(false)
 const isCreating = ref(false)
+const { globalSwipeX } = useSwipeState()
 
 const fetchPitches = async () => {
   if (isCreating.value) return // Don't fetch if creating
@@ -63,6 +66,16 @@ onMounted(() => {
   <div class="drawer drawer-end fixed inset-0 font-['Nunito']">
     <input id="app-drawer" type="checkbox" class="drawer-toggle" v-model="showMenu" />
     
+    <!-- Global Glow Effects -->
+    <div 
+        class="fixed inset-y-0 left-0 w-24 bg-gradient-to-r from-rose-500/40 to-transparent pointer-events-none transition-opacity duration-150 z-50"
+        :style="{ opacity: Math.min(Math.abs(Math.min(0, globalSwipeX)) / 150, 1) }"
+    ></div>
+    <div 
+        class="fixed inset-y-0 right-0 w-24 bg-gradient-to-l from-emerald-500/40 to-transparent pointer-events-none transition-opacity duration-150 z-50"
+        :style="{ opacity: Math.min(Math.max(0, globalSwipeX) / 150, 1) }"
+    ></div>
+
     <div class="drawer-content flex flex-col items-center justify-between p-4 sm:p-8 bg-base-200 overflow-hidden h-full">
         <!-- Page Content -->
         <AppHeader @openMenu="showMenu = true" />
@@ -112,6 +125,8 @@ onMounted(() => {
         @close="showMenu = false" 
         @logout="handleLogout" 
     />
+    
+    <SwipeParticles />
   </div>
 </template>
 
