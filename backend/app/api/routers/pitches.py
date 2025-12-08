@@ -3,7 +3,8 @@ from fastapi import APIRouter, Depends
 from sqlmodel import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db import get_session
-from app.models import Pitch, Vote
+from app.models import Pitch, Vote, PitchCreate, User
+from app.users import current_active_user
 
 router = APIRouter(tags=["Pitches"])
 
@@ -21,3 +22,17 @@ async def submit_vote(vote: Vote, session: AsyncSession = Depends(get_session)):
     await session.commit()
     await session.refresh(vote)
     return {"status": "recorded", "vote": vote}
+
+@router.post("/pitches", response_model=Pitch, operation_id="create_pitch")
+async def create_pitch(
+    pitch: PitchCreate,
+    session: AsyncSession = Depends(get_session),
+    user: User = Depends(current_active_user)
+):
+    """Create a new pitch."""
+    db_pitch = Pitch.model_validate(pitch)
+    db_pitch.submitter = user.username
+    session.add(db_pitch)
+    await session.commit()
+    await session.refresh(db_pitch)
+    return db_pitch

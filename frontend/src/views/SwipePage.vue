@@ -1,19 +1,21 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import SwipableCard from '../components/SwipableCard.vue'
-import SidebarMenu from '../components/SidebarMenu.vue'
+import { PitchesService } from '../client'
+import type { Pitch } from '../client/models/Pitch'
 import AppHeader from '../components/AppHeader.vue'
-import NoMoreCard from '../components/NoMoreCard.vue'
-import { PitchesService, type Pitch } from '../client'
-import { OpenAPI } from '../client/core/OpenAPI'
+import SidebarMenu from '../components/SidebarMenu.vue'
+import CardStack from '../components/CardStack.vue'
+import PitchCreationCard from '../components/PitchCreationCard.vue'
 
 const router = useRouter()
 const pitches = ref<Pitch[]>([])
-const loading = ref(true)
-const drawerOpen = ref(false)
+const loading = ref(false)
+const showMenu = ref(false)
+const isCreating = ref(false)
 
 const fetchPitches = async () => {
+  if (isCreating.value) return // Don't fetch if creating
   loading.value = true
   try {
     pitches.value = await PitchesService.getPitches()
@@ -24,70 +26,103 @@ const fetchPitches = async () => {
   }
 }
 
-const handleVote = async (direction: 'like' | 'dislike') => {
-  const currentPitch = pitches.value[0]
-  if (!currentPitch) return
+const handleVote = async (id: string, type: 'like' | 'dislike') => {
+    // Optimistic UI update
+    const pitch = pitches.value.find(p => p.id === id)
+    if (!pitch) return
 
-  // Optimistic UI: Remove card immediately
-  pitches.value.shift()
+    pitches.value = pitches.value.filter(p => p.id !== id)
 
-  try {
-    await PitchesService.submitVote({
-      pitch_id: currentPitch.id!,
-      vote_type: direction
-    })
-    console.log(`Voted ${direction} on ${currentPitch.title}`)
-  } catch (error) {
-    console.error("Failed to submit vote", error)
-  }
+    try {
+        await PitchesService.submitVote({
+            pitch_id: id,
+            vote_type: type
+        })
+    } catch (error) {
+        console.error('Failed to submit vote:', error)
+        // Ideally revert optimistic update here, but for now we just log
+    }
+}
+
+const handleCreated = () => {
+    isCreating.value = false
+    fetchPitches() // Refresh stack to maybe show new pitch (or just refresh)
 }
 
 const handleLogout = () => {
     localStorage.removeItem('access_token')
-    OpenAPI.TOKEN = ''
     router.push('/login')
 }
 
 onMounted(() => {
   fetchPitches()
 })
-
-const currentPitch = computed(() => pitches.value[0])
 </script>
 
 <template>
   <div class="drawer drawer-end fixed inset-0 font-['Nunito']">
-    <input id="app-drawer" type="checkbox" class="drawer-toggle" v-model="drawerOpen" />
+    <input id="app-drawer" type="checkbox" class="drawer-toggle" v-model="showMenu" />
     
     <div class="drawer-content flex flex-col items-center justify-between p-4 sm:p-8 bg-base-200 overflow-hidden h-full">
         <!-- Page Content -->
-        <AppHeader @openMenu="drawerOpen = true" />
+        <AppHeader @openMenu="showMenu = true" />
 
-        <main class="relative w-full max-w-md h-[70vh] max-h-[600px] my-4 flex items-center justify-center">
-        <div v-if="loading" class="flex flex-col items-center w-full h-full">
-            <div class="skeleton w-full h-full rounded-[2rem]"></div>
+        <div class="relative w-full max-w-md h-[70vh] md:h-[75vh] max-h-[600px] md:max-h-[700px] flex items-center justify-center">
+             <Transition name="fade" mode="out-in">
+                <PitchCreationCard
+                    v-if="isCreating"
+                    @created="handleCreated"
+                    @cancel="isCreating = false"
+                />
+                
+                <CardStack
+                    v-else
+                    :pitches="pitches"
+                    @vote="handleVote"
+                    @refresh="fetchPitches"
+                />
+             </Transition>
         </div>
-
-        <div v-else-if="currentPitch" class="relative w-full h-full flex items-center justify-center">
-            <SwipableCard 
-            :key="currentPitch.id"
-            :pitch="currentPitch" 
-            @vote="handleVote"
-            />
-            
-            <div v-if="pitches.length > 1" class="absolute inset-0 w-full h-full bg-base-100 rounded-[2rem] shadow-lg opacity-50 scale-95 -z-10 border border-base-300"></div>
-        </div>
-
-        <NoMoreCard v-else @refresh="fetchPitches" />
-        </main>
         
-        <div class="shrink-0 h-4"></div> <!-- Bottom spacer -->
+        <!-- Action Buttons -->
+        <div class="shrink-0 h-16 flex items-center justify-center w-full max-w-md">
+            <button 
+                v-if="!isCreating"
+                @click="isCreating = true" 
+                class="btn btn-circle btn-primary btn-lg shadow-xl hover:scale-105 transition-transform"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+            </button>
+             <button 
+                v-else
+                @click="isCreating = false" 
+                class="btn btn-circle btn-ghost btn-lg text-base-content/50 hover:bg-base-300"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
     </div> 
     
     <SidebarMenu 
         drawerId="app-drawer" 
-        @close="drawerOpen = false" 
+        @close="showMenu = false" 
         @logout="handleLogout" 
     />
   </div>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

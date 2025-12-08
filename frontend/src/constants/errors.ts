@@ -4,14 +4,18 @@ export const ErrorCodes = {
     LOGIN_BAD_CREDENTIALS: 'LOGIN_BAD_CREDENTIALS',
     REGISTER_USER_ALREADY_EXISTS: 'REGISTER_USER_ALREADY_EXISTS',
     REGISTER_INVALID_PASSWORD: 'REGISTER_INVALID_PASSWORD',
+    REGISTER_INVALID_USERNAME_LENGTH: 'REGISTER_INVALID_USERNAME_LENGTH',
+    REGISTER_INVALID_USERNAME_FORMAT: 'REGISTER_INVALID_USERNAME_FORMAT',
 } as const
 
 export const ErrorMessages = {
     [ErrorCodes.LOGIN_BAD_CREDENTIALS]: 'Incorrect email or password.',
-    [ErrorCodes.REGISTER_USER_ALREADY_EXISTS]: 'An account with this email already exists.',
-    [ErrorCodes.REGISTER_INVALID_PASSWORD]: `Password must be at least ${ValidationRules.MIN_PASSWORD_LENGTH} characters.`,
+    [ErrorCodes.REGISTER_USER_ALREADY_EXISTS]: 'A user with this email or username already exists.',
+    [ErrorCodes.REGISTER_INVALID_PASSWORD]: `Password must be at least ${ValidationRules.MIN_PASSWORD_LENGTH} characters long.`,
+    [ErrorCodes.REGISTER_INVALID_USERNAME_LENGTH]: `Username must be between ${ValidationRules.USERNAME_MIN_LENGTH} and ${ValidationRules.USERNAME_MAX_LENGTH} characters.`,
+    [ErrorCodes.REGISTER_INVALID_USERNAME_FORMAT]: 'Username can only contain letters, numbers, and underscores.',
     DEFAULT_LOGIN: 'Login failed. Please check your credentials.',
-    DEFAULT_REGISTER: 'Registration failed. Try a different email.',
+    DEFAULT_REGISTER: 'Registration failed. Please try again.',
     DEFAULT_UNKNOWN: 'An unexpected error occurred.',
 } as const
 

@@ -8,6 +8,7 @@ import { ValidationRules } from '../constants/validation'
 
 const router = useRouter()
 const email = ref('')
+const username = ref('')
 const password = ref('')
 const error = ref('')
 const loading = ref(false)
@@ -22,12 +23,25 @@ const handleRegister = async () => {
         loading.value = false
         return
     }
+
+    if (username.value.length < ValidationRules.USERNAME_MIN_LENGTH || username.value.length > ValidationRules.USERNAME_MAX_LENGTH) {
+        error.value = ErrorMessages.REGISTER_INVALID_USERNAME_LENGTH
+        loading.value = false
+        return
+    }
+
+    if (!ValidationRules.USERNAME_PATTERN.test(username.value)) {
+        error.value = ErrorMessages.REGISTER_INVALID_USERNAME_FORMAT
+        loading.value = false
+        return
+    }
     
     try {
         const register = AuthService.registerRegisterApiAuthRegisterPost
         await register({
             email: email.value,
             password: password.value,
+            username: username.value,
             is_active: true,
             is_superuser: false,
             is_verified: false
@@ -53,19 +67,23 @@ const handleRegister = async () => {
                 <form class="space-y-6" @submit.prevent="handleRegister">
                     <div class="form-control w-full">
                         <label class="label">
-                            <span class="label-text text-base">Email address</span>
+                            <span class="label-text text-base font-bold">Username <small class="text-sm font-normal text-base-content/60 ml-2">(Alphanumeric and underscores)</small></span>
+                        </label>
+                        <input type="text" required v-model="username" placeholder="cool_user" class="input input-bordered input-lg w-full" />
+                    </div>
+
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text text-base font-bold">Email address</span>
                         </label>
                         <input type="email" required v-model="email" placeholder="email@example.com" class="input input-bordered input-lg w-full" />
                     </div>
                     
                     <div class="form-control w-full">
                         <label class="label">
-                            <span class="label-text text-base">Password</span>
+                            <span class="label-text text-base font-bold">Password <small class="text-sm font-normal text-base-content/60 ml-2">(Minimum {{ ValidationRules.MIN_PASSWORD_LENGTH }} chars)</small></span>
                         </label>
                         <input type="password" required v-model="password" placeholder="********" class="input input-bordered input-lg w-full" />
-                        <label class="label">
-                            <span class="label-text-alt text-base-content/60">Must be at least {{ ValidationRules.MIN_PASSWORD_LENGTH }} characters</span>
-                        </label>
                     </div>
 
                     <div v-if="error" class="alert alert-error shadow-lg">

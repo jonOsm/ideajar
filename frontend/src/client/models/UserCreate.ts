@@ -8,5 +8,6 @@ export type UserCreate = {
     is_active?: (boolean | null);
     is_superuser?: (boolean | null);
     is_verified?: (boolean | null);
+    username: string;
 };
 
